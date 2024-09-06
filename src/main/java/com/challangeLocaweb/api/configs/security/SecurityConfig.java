@@ -1,4 +1,4 @@
-package com.challangeLocaweb.api.config.security;
+package com.challangeLocaweb.api.configs.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
