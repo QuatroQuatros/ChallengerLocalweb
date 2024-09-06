@@ -1,6 +1,6 @@
 package com.challangeLocaweb.api.controllers;
 
-import com.challangeLocaweb.api.config.security.TokenService;
+import com.challangeLocaweb.api.configs.security.TokenService;
 import com.challangeLocaweb.api.dtos.BaseResponseDTO;
 import com.challangeLocaweb.api.dtos.auth.LoginDTO;
 import com.challangeLocaweb.api.dtos.auth.LoginResponseDTO;

@@ -1,4 +1,4 @@
-package com.challangeLocaweb.api.config.security;
+package com.challangeLocaweb.api.configs.security;
 
 
 import com.challangeLocaweb.api.repositories.UserRepository;
