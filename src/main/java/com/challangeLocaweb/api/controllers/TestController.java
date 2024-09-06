@@ -16,4 +16,10 @@ public class TestController {
     public BaseResponseDTO<Object> hello(){
         return new BaseResponseDTO<>("batata");
     }
+
+    @GetMapping("/auth")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseDTO<Object> helloAuth(){
+        return new BaseResponseDTO<>("batata autenticada");
+    }
 }
