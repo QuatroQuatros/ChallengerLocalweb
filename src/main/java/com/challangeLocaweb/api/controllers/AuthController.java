@@ -7,6 +7,7 @@ import com.challangeLocaweb.api.dtos.auth.LoginResponseDTO;
 import com.challangeLocaweb.api.dtos.user.UserCreateDTO;
 import com.challangeLocaweb.api.dtos.user.UserResponseDTO;
 import com.challangeLocaweb.api.models.User;
+import com.challangeLocaweb.api.services.EmailService;
 import com.challangeLocaweb.api.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class AuthController {
 
     @Autowired
     private UserServiceImpl service;
+    @Autowired
+    private EmailService emailService;
+
 
     @Autowired
     private TokenService tokenService;
@@ -54,9 +58,13 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponseDTO<UserResponseDTO> register(@RequestBody @Valid UserCreateDTO userData){
+        UserResponseDTO newUser = service.store(userData);
+
+        emailService.queueEmail(userData.email(), "Welcome to our platform", "You are registered!");
+
         return new BaseResponseDTO<>(
                 "user register successfuly!",
-                service.store(userData)
+                newUser
         );
 
     }
