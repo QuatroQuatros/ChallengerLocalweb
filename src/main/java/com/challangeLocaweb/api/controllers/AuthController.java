@@ -11,6 +11,8 @@ import com.challangeLocaweb.api.services.EmailService;
 import com.challangeLocaweb.api.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     private AuthenticationManager authManager;
@@ -44,9 +49,9 @@ public class AuthController {
         Authentication auth = authManager.authenticate(usernamePassword);
 
         String token = tokenService.createToken((User)auth.getPrincipal());
-
+        String message = messageSource.getMessage("user.login", null, LocaleContextHolder.getLocale());
         return new BaseResponseDTO<>(
-                "You are logged in!",
+                message,
                 new LoginResponseDTO(
                         new UserResponseDTO((User)auth.getPrincipal())
                         ,token
@@ -62,8 +67,9 @@ public class AuthController {
 
         emailService.queueEmail(userData.email(), "Welcome to our platform", "You are registered!");
 
+        String message = messageSource.getMessage("user.register.successfuly", null, LocaleContextHolder.getLocale());
         return new BaseResponseDTO<>(
-                "user register successfuly!",
+                message,
                 newUser
         );
 
