@@ -2,7 +2,10 @@ package com.challangeLocaweb.api.services.impl;
 
 import com.challangeLocaweb.api.exceptions.ModelNotFoundException;
 import com.challangeLocaweb.api.services.CRUDInterface;
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,15 +34,20 @@ public abstract class AbstractCrudService<Entity, ID, CreateDTO, UpdateDTO, Resp
         if (entityOptional.isPresent()) {
             return toResponseDTO(entityOptional.get());
         } else {
-            throw new ModelNotFoundException("entity not found");
+            throw new ModelNotFoundException("error.entity.not.found");
         }
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public ResponseDTO store(CreateDTO dto) {
-        Entity entity = toEntity(dto);
-        return toResponseDTO(getRepository().save(entity));
+        try{
+            Entity entity = toEntity(dto);
+            return toResponseDTO(getRepository().save(entity));
+        } catch (DataIntegrityViolationException e) {
+            throw e;
+        }
+
     }
 
     @Transactional
@@ -51,7 +59,7 @@ public abstract class AbstractCrudService<Entity, ID, CreateDTO, UpdateDTO, Resp
             return toResponseDTO(getRepository().save(updatedEntity));
 
         } else {
-            throw new ModelNotFoundException("entity not found");
+            throw new ModelNotFoundException("error.entity.not.found");
         }
     }
 
@@ -59,7 +67,7 @@ public abstract class AbstractCrudService<Entity, ID, CreateDTO, UpdateDTO, Resp
     @Override
     public void delete(ID id) {
         if (!getRepository().existsById(id)) {
-            throw new ModelNotFoundException("entity not found");
+            throw new ModelNotFoundException("error.entity.not.found");
         }
         getRepository().deleteById(id);
     }
