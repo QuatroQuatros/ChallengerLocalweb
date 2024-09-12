@@ -5,15 +5,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record UserCreateDTO(
-        @NotBlank(message = "O nome do usuário é obrigatório!")
+
+        @NotBlank(message = "{user.name.notblank}")
         String name,
 
-        @NotBlank(message = "O email do usuário é obrigatório!")
-        @Email(message = "O email fornecido não é válido!")
+        @NotBlank(message = "{user.email.notblank}")
+        @Email(message = "{user.email.invalid}")
         String email,
 
-        @NotBlank(message = "A senha do usuário é obrigatória!")
-        @Size(min = 6, message = "A senha deve conter no minímo 6 caracteres")
+        @NotBlank(message = "{user.password.notblank}")
+        @Size(min = 6, message = "{user.password.size}")
         String password
-) {
-}
+) {}

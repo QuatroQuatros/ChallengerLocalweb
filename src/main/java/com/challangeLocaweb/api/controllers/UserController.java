@@ -9,6 +9,8 @@ import com.challangeLocaweb.api.helpers.AuthHelpers;
 import com.challangeLocaweb.api.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserController {
 
+    @Autowired
+    private MessageSource messageSource;
+
     private final UserService service;
 
     @Autowired
@@ -28,68 +33,73 @@ public class UserController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseDTO<Page<UserResponseDTO>> listar(Pageable page){
+    public BaseResponseDTO<Page<UserResponseDTO>> listAll(Pageable page){
+        String message = messageSource.getMessage("user.search.success", null, LocaleContextHolder.getLocale());
         return new BaseResponseDTO<>(
-                "busca de usuários feita com sucesso!",
+                message,
                 service.getAll(page)
         );
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseDTO<UserResponseDTO> buscarPorId(@PathVariable Long id){
+    public BaseResponseDTO<UserResponseDTO> getByID(@PathVariable Long id){
         try{
+            String message = messageSource.getMessage("user.search.success", null, LocaleContextHolder.getLocale());
             return new BaseResponseDTO<>(
-                    "busca de usuário feita com sucesso!",
+                    message,
                     service.getById(id)
             );
         }catch (ModelNotFoundException e){
-            throw new ModelNotFoundException("usuário não encontrado");
+            throw new ModelNotFoundException("error.user.not.found");
         }
 
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponseDTO<UserResponseDTO> gravar(@RequestBody @Valid UserCreateDTO usuarioDados){
+    public BaseResponseDTO<UserResponseDTO> store(@RequestBody @Valid UserCreateDTO usuarioDados){
+        String message = messageSource.getMessage("user.created.success", null, LocaleContextHolder.getLocale());
         return new BaseResponseDTO<>(
-                "usuário cadastrado com sucesso",
+                message,
                 service.store(usuarioDados)
         );
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseDTO<UserResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid UserUpdateDTO usuarioDados){
+    public BaseResponseDTO<UserResponseDTO> update(@PathVariable Long id, @RequestBody @Valid UserUpdateDTO usuarioDados){
         AuthHelpers authHelpers = new AuthHelpers();
         if (authHelpers.validateAccess(id)) {
             try{
+                String message = messageSource.getMessage("user.updated.success", null, LocaleContextHolder.getLocale());
                 return new BaseResponseDTO<>(
-                        "usuário atualizado com sucesso!",
+                        message,
                         service.update(id, usuarioDados)
                 );
             }catch (ModelNotFoundException e){
-                throw new ModelNotFoundException("usuário não encontrado");
+                throw new ModelNotFoundException("error.user.not.found");
             }
         } else {
-            throw new AccessDeniedException("Você não tem permissão para atualizar este usuário.");
+            throw new AccessDeniedException("user.update.permission.denied");
         }
 
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public BaseResponseDTO<Object> excluir(@PathVariable Long id){
+    public BaseResponseDTO<Object> delete(@PathVariable Long id){
         AuthHelpers authHelpers = new AuthHelpers();
         if (authHelpers.validateAccess(id)) {
             try{
                 service.delete(id);
-                return new BaseResponseDTO<>("usuário excluido com sucesso", null);
+                String message = messageSource.getMessage("user.deleted.success", null, LocaleContextHolder.getLocale());
+                return new BaseResponseDTO<>(message, null);
             }catch (ModelNotFoundException e){
-                throw new ModelNotFoundException("usuário não encontrado");
+                throw new ModelNotFoundException("error.user.not.found");
             }
         } else {
-            throw new AccessDeniedException("Você não tem permissão para excluír este usuário.");
+            throw new AccessDeniedException("user.delete.permission.denied");
         }
 
     }
