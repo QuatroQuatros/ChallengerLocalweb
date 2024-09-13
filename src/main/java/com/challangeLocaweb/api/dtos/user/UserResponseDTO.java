@@ -29,4 +29,5 @@ public record UserResponseDTO(
     public BaseResponseDTO<UserResponseDTO> toResponseDto() {
         return new BaseResponseDTO<>( "fetch users successfuly", this);
     }
+
 }
