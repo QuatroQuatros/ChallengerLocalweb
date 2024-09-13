@@ -51,6 +51,9 @@ public class UserServiceImpl extends AbstractCrudService<User, Long, UserCreateD
     @Override
     public UserResponseDTO store(UserCreateDTO userData) {
         try {
+            if (userData.password() == null) {
+                throw new IllegalArgumentException("error.password.required");
+            }
             String passwordHash = new BCryptPasswordEncoder().encode(userData.password());
 
             User user = new User();

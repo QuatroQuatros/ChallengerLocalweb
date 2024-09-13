@@ -2,6 +2,7 @@ package com.challangeLocaweb.api.dtos.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 
 public record UserUpdateDTO(
@@ -12,6 +13,7 @@ public record UserUpdateDTO(
         @Email(message = "{user.email.invalid}")
         String email,
 
+        @Null
         String photo
 ) {
 }
