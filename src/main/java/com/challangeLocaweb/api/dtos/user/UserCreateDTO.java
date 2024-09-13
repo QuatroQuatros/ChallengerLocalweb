@@ -13,6 +13,8 @@ public record UserCreateDTO(
         @Email(message = "{user.email.invalid}")
         String email,
 
+        String photo,
+
         @NotBlank(message = "{user.password.notblank}")
         @Size(min = 6, message = "{user.password.size}")
         String password

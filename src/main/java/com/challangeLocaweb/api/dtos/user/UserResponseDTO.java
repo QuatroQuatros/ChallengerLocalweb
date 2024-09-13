@@ -9,6 +9,7 @@ public record UserResponseDTO(
         Long id,
         String name,
         String email,
+        String photo,
 
         LocalDateTime created_at,
 
@@ -19,6 +20,7 @@ public record UserResponseDTO(
                 user.getUserid(),
                 user.getName(),
                 user.getEmail(),
+                user.getPhoto(),
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );

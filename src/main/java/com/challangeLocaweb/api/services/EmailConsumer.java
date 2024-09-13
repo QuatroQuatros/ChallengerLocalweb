@@ -11,23 +11,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailConsumer {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Value("${spring.mail.username}")
-    private String sender;
-
-    @RabbitListener(queues = "emailQueue")
-    public void processQueue(EmailMessage emailMessage) {
-        try {
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setFrom(sender);
-            simpleMailMessage.setTo(emailMessage.getRecipient());
-            simpleMailMessage.setSubject(emailMessage.getSubject());
-            simpleMailMessage.setText(emailMessage.getMessage());
-            javaMailSender.send(simpleMailMessage);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @Autowired
+//    private JavaMailSender javaMailSender;
+//
+//    @Value("${spring.mail.username}")
+//    private String sender;
+//
+//    @RabbitListener(queues = "emailQueue")
+//    public void processQueue(EmailMessage emailMessage) {
+//        try {
+//            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+//            simpleMailMessage.setFrom(sender);
+//            simpleMailMessage.setTo(emailMessage.getRecipient());
+//            simpleMailMessage.setSubject(emailMessage.getSubject());
+//            simpleMailMessage.setText(emailMessage.getMessage());
+//            javaMailSender.send(simpleMailMessage);
+//        } catch (RuntimeException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

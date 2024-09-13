@@ -31,6 +31,9 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 255)
     private String email;
 
+    @Column(nullable = true, length = 255)
+    private String photo;
+
     @Column(nullable = false, length = 255)
     private String password;
 

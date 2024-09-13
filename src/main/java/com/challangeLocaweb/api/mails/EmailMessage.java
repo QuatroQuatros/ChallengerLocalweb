@@ -12,14 +12,14 @@ public class EmailMessage implements Serializable {
 
     private String recipient;
     private String subject;
-    private String message;
+    private String content;
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public EmailMessage(String recipient, String subject, String message) {
+    public EmailMessage(String recipient, String subject, String content) {
         this.recipient = recipient;
         this.subject = subject;
-        this.message = message;
+        this.content = content;
     }
 }
