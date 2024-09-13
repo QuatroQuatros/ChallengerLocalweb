@@ -10,7 +10,9 @@ public record UserUpdateDTO(
 
         @NotBlank(message = "{user.email.notblank}")
         @Email(message = "{user.email.invalid}")
-        String email
+        String email,
+
+        String photo
 ) {
 }
 

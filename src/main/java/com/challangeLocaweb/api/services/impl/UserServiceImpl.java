@@ -57,6 +57,10 @@ public class UserServiceImpl extends AbstractCrudService<User, Long, UserCreateD
             BeanUtils.copyProperties(userData, user);
             user.setPassword(passwordHash);
 
+            if(userData.photo() == null) {
+                user.setPhoto("https://ui-avatars.com/api/?background=random&name=" + userData.name());
+            }
+
             return new UserResponseDTO(userRepository.save(user));
 
         } catch (DataIntegrityViolationException  e) {
