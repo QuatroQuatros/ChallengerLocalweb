@@ -8,7 +8,6 @@ import com.challangeLocaweb.api.exceptions.ModelNotFoundException;
 import com.challangeLocaweb.api.helpers.AuthHelpers;
 import com.challangeLocaweb.api.services.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ public class UserController {
 
     private final UserService service;
 
-    @Autowired
     public UserController(UserService service) {
         this.service = service;
     }
