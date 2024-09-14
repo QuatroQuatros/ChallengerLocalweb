@@ -2,6 +2,7 @@ package com.challangeLocaweb.api.advice;
 
 import com.challangeLocaweb.api.exceptions.DuplicateEntryException;
 import com.challangeLocaweb.api.exceptions.ModelNotFoundException;
+import com.challangeLocaweb.api.exceptions.UserNotAuthenticatedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -39,9 +40,7 @@ public class ApplicationExceptionHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DuplicateEntryException.class)
-    public Map<String, String> handleDuplicateEntryException(DuplicateEntryException error) {
-        return getErrorMap(error);
-    }
+    public Map<String, String> handleDuplicateEntryException(DuplicateEntryException error) {return getErrorMap(error);}
 
 
     @ResponseStatus(HttpStatus.CONFLICT)  // 409 Conflict
@@ -80,6 +79,10 @@ public class ApplicationExceptionHandler {
     public Map<String, String> handleAccessDenied(AccessDeniedException error){
         return getErrorMap(error);
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(UserNotAuthenticatedException.class)
+    public Map<String, String> handleUserNotAuthenticated(UserNotAuthenticatedException error){return getErrorMap(error);}
 
 
     private Map<String, String> getErrorMap(Exception error){

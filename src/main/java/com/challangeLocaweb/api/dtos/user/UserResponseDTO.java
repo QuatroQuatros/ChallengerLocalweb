@@ -17,7 +17,7 @@ public record UserResponseDTO(
 ) {
     public UserResponseDTO(User user){
         this(
-                user.getUserid(),
+                user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getPhoto(),

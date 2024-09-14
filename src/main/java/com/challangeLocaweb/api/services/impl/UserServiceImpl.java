@@ -7,6 +7,7 @@ import com.challangeLocaweb.api.exceptions.DuplicateEntryException;
 import com.challangeLocaweb.api.models.User;
 import com.challangeLocaweb.api.repositories.UserRepository;
 import com.challangeLocaweb.api.services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -49,6 +50,7 @@ public class UserServiceImpl extends AbstractCrudService<User, Long, UserCreateD
     }
 
     @Override
+    @Transactional
     public UserResponseDTO store(UserCreateDTO userData) {
         try {
             if (userData.password() == null) {

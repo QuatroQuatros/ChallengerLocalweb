@@ -4,7 +4,7 @@ import com.challangeLocaweb.api.dtos.auth.LoginDTO;
 import com.challangeLocaweb.api.dtos.user.UserCreateDTO;
 import com.challangeLocaweb.api.dtos.user.UserResponseDTO;
 import com.challangeLocaweb.api.models.User;
-import com.challangeLocaweb.api.services.EmailService;
+import com.challangeLocaweb.api.services.QueueService;
 import com.challangeLocaweb.api.configs.security.TokenService;
 import com.challangeLocaweb.api.services.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ class AuthControllerTest {
     private UserServiceImpl userService;
 
     @Mock
-    private EmailService emailService;
+    private QueueService queueService;
 
     @Mock
     private TokenService tokenService;
@@ -94,7 +94,7 @@ class AuthControllerTest {
                 .andExpect(status().isCreated());
 
         verify(userService, times(1)).store(any(UserCreateDTO.class));
-        verify(emailService, times(1)).queueEmail(anyString(), anyString(), anyString());
+        verify(queueService, times(1)).queueEmail(anyString(), anyString(), anyString());
         verify(messageSource, times(1)).getMessage(eq("user.register.successfuly"), any(), any(Locale.class));
     }
 }
