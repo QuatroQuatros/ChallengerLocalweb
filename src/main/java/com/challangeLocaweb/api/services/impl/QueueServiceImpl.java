@@ -1,13 +1,13 @@
 package com.challangeLocaweb.api.services.impl;
 
 import com.challangeLocaweb.api.mails.EmailMessage;
-import com.challangeLocaweb.api.services.EmailService;
+import com.challangeLocaweb.api.services.QueueService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailServiceImpl implements EmailService {
+public class QueueServiceImpl implements QueueService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;

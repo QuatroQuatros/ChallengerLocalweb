@@ -7,7 +7,7 @@ import com.challangeLocaweb.api.dtos.auth.LoginResponseDTO;
 import com.challangeLocaweb.api.dtos.user.UserCreateDTO;
 import com.challangeLocaweb.api.dtos.user.UserResponseDTO;
 import com.challangeLocaweb.api.models.User;
-import com.challangeLocaweb.api.services.EmailService;
+import com.challangeLocaweb.api.services.QueueService;
 import com.challangeLocaweb.api.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class AuthController {
     @Autowired
     private UserServiceImpl service;
     @Autowired
-    private EmailService emailService;
+    private QueueService queueService;
 
 
     @Autowired
@@ -65,7 +65,7 @@ public class AuthController {
     public BaseResponseDTO<UserResponseDTO> register(@RequestBody @Valid UserCreateDTO userData){
         UserResponseDTO newUser = service.store(userData);
 
-        emailService.queueEmail(userData.email(), "Welcome to our platform", "Parabéns, você acaba de liberar seu próprio pombo-correio digital! \uD83D\uDC26✉\uFE0F Ele está pronto para voar alto e entregar seus e-mails com a eficiência de um... pombo ninja! (Sim, eles existem... pelo menos por aqui \uD83D\uDE09) Fique tranquilo, aqui seus e-mails chegam rapidinho (e sem sujeira de pombo nas janelas, prometemos). Agora é só relaxar e deixar que a gente cuide do resto. Se precisar de algo, é só dar um pitiu que o pombo responde! Abraços (e umas asinhas), Equipe do Pombas");
+        queueService.queueEmail(userData.email(), "Welcome to our platform", "Parabéns, você acaba de liberar seu próprio pombo-correio digital! \uD83D\uDC26✉\uFE0F Ele está pronto para voar alto e entregar seus e-mails com a eficiência de um... pombo ninja! (Sim, eles existem... pelo menos por aqui \uD83D\uDE09) Fique tranquilo, aqui seus e-mails chegam rapidinho (e sem sujeira de pombo nas janelas, prometemos). Agora é só relaxar e deixar que a gente cuide do resto. Se precisar de algo, é só dar um pitiu que o pombo responde! Abraços (e umas asinhas), Equipe do Pombas");
 
         String message = messageSource.getMessage("user.register.successfuly", null, LocaleContextHolder.getLocale());
         return new BaseResponseDTO<>(
