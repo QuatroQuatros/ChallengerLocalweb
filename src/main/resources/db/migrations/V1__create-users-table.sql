@@ -1,5 +1,5 @@
 CREATE TABLE users (
-                       id SERIAL PRIMARY KEY,
+                       id INTEGER PRIMARY KEY AUTO_INCREMENT,
                        name VARCHAR(255) NOT NULL,
                        email VARCHAR(255) NOT NULL UNIQUE,
                        photo VARCHAR(255), 

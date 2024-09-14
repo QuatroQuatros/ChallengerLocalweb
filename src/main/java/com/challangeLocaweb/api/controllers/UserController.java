@@ -51,34 +51,34 @@ public class UserController {
                     service.getById(id)
             );
         }catch (ModelNotFoundException e){
-            throw new ModelNotFoundException("error.user.not.found");
+            throw new ModelNotFoundException("user.not.found");
         }
 
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponseDTO<UserResponseDTO> store(@RequestBody @Valid UserCreateDTO usuarioDados){
+    public BaseResponseDTO<UserResponseDTO> store(@RequestBody @Valid UserCreateDTO userData){
         String message = messageSource.getMessage("user.created.success", null, LocaleContextHolder.getLocale());
         return new BaseResponseDTO<>(
                 message,
-                service.store(usuarioDados)
+                service.store(userData)
         );
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseDTO<UserResponseDTO> update(@PathVariable Long id, @RequestBody @Valid UserUpdateDTO usuarioDados){
+    public BaseResponseDTO<UserResponseDTO> update(@PathVariable Long id, @RequestBody @Valid UserUpdateDTO userData){
         AuthHelpers authHelpers = new AuthHelpers();
         if (authHelpers.validateAccess(id)) {
             try{
                 String message = messageSource.getMessage("user.updated.success", null, LocaleContextHolder.getLocale());
                 return new BaseResponseDTO<>(
                         message,
-                        service.update(id, usuarioDados)
+                        service.update(id, userData)
                 );
             }catch (ModelNotFoundException e){
-                throw new ModelNotFoundException("error.user.not.found");
+                throw new ModelNotFoundException("user.not.found");
             }
         } else {
             throw new AccessDeniedException("user.update.permission.denied");
@@ -96,7 +96,7 @@ public class UserController {
                 String message = messageSource.getMessage("user.deleted.success", null, LocaleContextHolder.getLocale());
                 return new BaseResponseDTO<>(message, null);
             }catch (ModelNotFoundException e){
-                throw new ModelNotFoundException("error.user.not.found");
+                throw new ModelNotFoundException("user.not.found");
             }
         } else {
             throw new AccessDeniedException("user.delete.permission.denied");

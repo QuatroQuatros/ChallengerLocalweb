@@ -56,7 +56,6 @@ class UserServiceImplTest {
 
     @Test
     void testStore_DuplicateEmail() {
-        // Cenário
         UserCreateDTO userCreateDTO = new UserCreateDTO("user@test.com", "Test User", null, "password123");
 
         SQLIntegrityConstraintViolationException sqlException = new SQLIntegrityConstraintViolationException("Duplicate entry");
