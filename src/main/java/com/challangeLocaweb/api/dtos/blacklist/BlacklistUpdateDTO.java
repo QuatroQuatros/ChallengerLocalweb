@@ -1,7 +1,6 @@
 package com.challangeLocaweb.api.dtos.blacklist;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 
 public record BlacklistUpdateDTO(
