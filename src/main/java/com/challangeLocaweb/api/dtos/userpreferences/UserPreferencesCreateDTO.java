@@ -13,4 +13,7 @@ public record UserPreferencesCreateDTO(
     @NotBlank(message = "user.preferences.timezone.notblank")
     String timezone
 ) {
+    public UserPreferencesCreateDTO() {
+        this("light", "pt_BR", "UTC-3");
+    }
 }
