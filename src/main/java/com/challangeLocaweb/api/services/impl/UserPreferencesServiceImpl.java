@@ -59,7 +59,7 @@ public class UserPreferencesServiceImpl extends AbstractCrudService<UserPreferen
         BeanUtils.copyProperties(userPreferencesCreateDTO, userPreferences);
         User user = authHelpers.getUser();
         userPreferences.setUser(user);
-        return new UserPreferencesResponseDTO(userPreferencesRepository.save(userPreferences));
+        return new UserPreferencesResponseDTO(getRepository().save(userPreferences));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class UserPreferencesServiceImpl extends AbstractCrudService<UserPreferen
             User user = userPreferencesOptional.get().getUser();
             if (user.getId().equals(idUser)) {
                 UserPreferences userPreferences = updateEntity(userPreferencesOptional.get(), userPreferencesUpdateDTO);
-                return new UserPreferencesResponseDTO(userPreferencesRepository.save(userPreferences));
+                return new UserPreferencesResponseDTO(getRepository().save(userPreferences));
             } else {
                 throw new UserNotAuthenticatedException("user.update.permission.denied");
             }
@@ -83,7 +83,7 @@ public class UserPreferencesServiceImpl extends AbstractCrudService<UserPreferen
 
     @Override
     public UserPreferencesResponseDTO getById(Long id){
-        Optional<UserPreferences> userPreferencesOptional = userPreferencesRepository.findById(id);
+        Optional<UserPreferences> userPreferencesOptional = getRepository().findById(id);
         if (userPreferencesOptional.isPresent()) {
             return toResponseDTO(userPreferencesOptional.get());
         } else {
@@ -100,5 +100,13 @@ public class UserPreferencesServiceImpl extends AbstractCrudService<UserPreferen
         } else {
             throw new ModelNotFoundException("user.preferences.not.found");
         }
+    }
+
+    @Override
+    public void delete(Long id) {
+        if (!getRepository().existsById(id)) {
+            throw new ModelNotFoundException("user.preferences.not.found");
+        }
+        getRepository().deleteById(id);
     }
 }
