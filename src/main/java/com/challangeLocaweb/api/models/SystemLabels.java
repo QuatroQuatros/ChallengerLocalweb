@@ -6,30 +6,21 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_preferences")
+@Table(name = "system_labels")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class UserPreferences {
-
+public class SystemLabels {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(name = "theme", nullable = false)
-    private String theme;
-
-    @Column(name = "language", nullable = false)
-    private String language;
-
-    @Column(name = "timezone", nullable = false)
-    private String timezone;
+    @Column(name = "label_name", nullable = false)
+    private String labelName;
 
     @Column(name = "created_at", nullable =false)
     private LocalDateTime createdAt;
@@ -47,5 +38,4 @@ public class UserPreferences {
     protected void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
 }
