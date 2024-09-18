@@ -6,6 +6,7 @@ import com.challangeLocaweb.api.dtos.user.UserResponseDTO;
 import com.challangeLocaweb.api.dtos.user.UserUpdateDTO;
 import com.challangeLocaweb.api.exceptions.ModelNotFoundException;
 import com.challangeLocaweb.api.helpers.AuthHelpers;
+import com.challangeLocaweb.api.models.User;
 import com.challangeLocaweb.api.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,24 @@ public class UserController {
         } else {
             throw new AccessDeniedException("user.delete.permission.denied");
         }
+
+    }
+
+    @GetMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseDTO<UserResponseDTO> getMyUser(){
+        AuthHelpers authHelpers = new AuthHelpers();
+        try{
+            User user = authHelpers.getUser();
+            String message = messageSource.getMessage("user.recovered.success", null, LocaleContextHolder.getLocale());
+            return new BaseResponseDTO<>(
+                    message,
+                    new UserResponseDTO(user)
+            );
+        }catch (ModelNotFoundException e){
+            throw new ModelNotFoundException("user.not.found");
+        }
+
 
     }
 }
