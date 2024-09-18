@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.challangeLocaweb.api.dtos.BaseResponseDTO;
-import com.challangeLocaweb.api.dtos.userpreferences.UserPreferencesResponseDTO;
-import com.challangeLocaweb.api.dtos.userpreferences.UserPreferencesUpdateDTO;
+import com.challangeLocaweb.api.dtos.user.preferences.UserPreferencesResponseDTO;
+import com.challangeLocaweb.api.dtos.user.preferences.UserPreferencesUpdateDTO;
 import com.challangeLocaweb.api.exceptions.ModelNotFoundException;
 import com.challangeLocaweb.api.services.UserPreferencesService;
 

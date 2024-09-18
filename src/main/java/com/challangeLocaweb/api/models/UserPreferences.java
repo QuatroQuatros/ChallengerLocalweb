@@ -29,13 +29,10 @@ public class UserPreferences {
     @Column(name = "language", nullable = false)
     private String language;
 
-    @Column(name = "timezone", nullable = false)
-    private String timezone;
-
     @Column(name = "created_at", nullable =false)
     private LocalDateTime createdAt;
 
-    @Column(name = "update_at", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
 

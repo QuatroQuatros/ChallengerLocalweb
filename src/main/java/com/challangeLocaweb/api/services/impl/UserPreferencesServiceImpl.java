@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import com.challangeLocaweb.api.dtos.userpreferences.UserPreferencesCreateDTO;
-import com.challangeLocaweb.api.dtos.userpreferences.UserPreferencesResponseDTO;
-import com.challangeLocaweb.api.dtos.userpreferences.UserPreferencesUpdateDTO;
+import com.challangeLocaweb.api.dtos.user.preferences.UserPreferencesCreateDTO;
+import com.challangeLocaweb.api.dtos.user.preferences.UserPreferencesResponseDTO;
+import com.challangeLocaweb.api.dtos.user.preferences.UserPreferencesUpdateDTO;
 import com.challangeLocaweb.api.exceptions.ModelNotFoundException;
 import com.challangeLocaweb.api.exceptions.UserNotAuthenticatedException;
 import com.challangeLocaweb.api.helpers.AuthHelpers;
@@ -49,7 +49,6 @@ public class UserPreferencesServiceImpl extends AbstractCrudService<UserPreferen
     protected UserPreferences updateEntity(UserPreferences existingEntity, UserPreferencesUpdateDTO updateDto) {
         existingEntity.setTheme(updateDto.theme());
         existingEntity.setLanguage(updateDto.language());
-        existingEntity.setTimezone(updateDto.timezone());
         return existingEntity;
     }
 

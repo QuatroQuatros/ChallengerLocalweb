@@ -4,12 +4,14 @@ import com.challangeLocaweb.api.dtos.emails.EmailCreateDTO;
 import com.challangeLocaweb.api.dtos.emails.EmailResponseDTO;
 import com.challangeLocaweb.api.dtos.emails.EmailUpdateDTO;
 import com.challangeLocaweb.api.exceptions.DuplicateEntryException;
+import com.challangeLocaweb.api.mails.EmailMessage;
 import com.challangeLocaweb.api.models.Email;
 import com.challangeLocaweb.api.models.EmailSent;
 import com.challangeLocaweb.api.models.User;
 import com.challangeLocaweb.api.repositories.EmailRepository;
 import com.challangeLocaweb.api.repositories.EmailSentRepository;
 import com.challangeLocaweb.api.services.EmailService;
+import com.challangeLocaweb.api.services.QueueService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class EmailServiceImpl extends AbstractCrudService<Email, Long, EmailCrea
 
     @Autowired
     private EmailSentRepository emailSentRepository;
+
+    @Autowired
+    private QueueService queueService;
 
     @Override
     protected JpaRepository<Email, Long> getRepository() {
@@ -64,9 +69,13 @@ public class EmailServiceImpl extends AbstractCrudService<Email, Long, EmailCrea
         try {
             Email email = new Email();
             BeanUtils.copyProperties(emailData, email);
-            Email emailSaved = emailRepository.save(email);
 
+            Email emailSaved = emailRepository.save(email);
             User user = authHelpers.getUser();
+
+            EmailMessage emailMessage = new EmailMessage(email.getSender(), email.getSubject(), email.getContentPlain());
+            queueService.queueEmail(emailMessage);
+
 
             EmailSent emailSent = new EmailSent();
             emailSent.setEmail(emailSaved);
