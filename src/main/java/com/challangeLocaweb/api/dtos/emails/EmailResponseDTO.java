@@ -11,8 +11,8 @@ public record EmailResponseDTO(
         String contentHtml,
         String contentPlain,
         Boolean isConfidential,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime created_at,
+        LocalDateTime updated_at
 ) {
     public EmailResponseDTO(Email email) {
         this(

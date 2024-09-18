@@ -1,6 +1,11 @@
 package com.challangeLocaweb.api.services;
 
+import com.challangeLocaweb.api.mails.EmailMessage;
+import com.challangeLocaweb.api.mails.WelcomeEmail;
+import com.challangeLocaweb.api.models.Email;
+
 public interface QueueService {
 
-    void queueEmail(String recipient, String subject, String message);
+    void queueEmail(EmailMessage emailMessage);
+    void queueWelcomeEmail(WelcomeEmail welcomeEmail);
 }

@@ -28,4 +28,9 @@ public class RabbitMQConfig {
     public Queue emailQueue() {
         return new Queue("emailQueue", true);
     }
+
+    @Bean
+    public Queue welcomeEmailQueue() {
+        return new Queue("welcomeEmailQueue", true);
+    }
 }

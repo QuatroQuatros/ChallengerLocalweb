@@ -54,7 +54,7 @@ public class EmailController {
 
     }
 
-    @PostMapping("")
+    @PostMapping("/send")
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponseDTO<EmailResponseDTO> store(@RequestBody @Valid EmailCreateDTO emailData){
         String message = messageSource.getMessage("email.created.success", null, LocaleContextHolder.getLocale());
