@@ -31,9 +31,9 @@ public class AuthController {
 
     @Autowired
     private UserServiceImpl service;
+
     @Autowired
     private QueueService queueService;
-
 
     @Autowired
     private TokenService tokenService;
@@ -62,15 +62,17 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponseDTO<UserResponseDTO> register(@RequestBody @Valid UserCreateDTO userData){
+    public BaseResponseDTO<LoginResponseDTO> register(@RequestBody @Valid UserCreateDTO userData){
         UserResponseDTO newUser = service.store(userData);
 
-        queueService.queueEmail(userData.email(), "Welcome to our platform", "Parabéns, você acaba de liberar seu próprio pombo-correio digital! \uD83D\uDC26✉\uFE0F Ele está pronto para voar alto e entregar seus e-mails com a eficiência de um... pombo ninja! (Sim, eles existem... pelo menos por aqui \uD83D\uDE09) Fique tranquilo, aqui seus e-mails chegam rapidinho (e sem sujeira de pombo nas janelas, prometemos). Agora é só relaxar e deixar que a gente cuide do resto. Se precisar de algo, é só dar um pitiu que o pombo responde! Abraços (e umas asinhas), Equipe do Pombas");
+        User user = service.findByEmail(userData.email());
+
+        String token = tokenService.createToken(user);
 
         String message = messageSource.getMessage("user.register.successfuly", null, LocaleContextHolder.getLocale());
         return new BaseResponseDTO<>(
                 message,
-                newUser
+                new LoginResponseDTO(newUser, token)
         );
 
     }

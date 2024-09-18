@@ -37,7 +37,7 @@ class UserServiceImplTest {
 
     @Test
     void testStore_Success() {
-        UserCreateDTO userCreateDTO = new UserCreateDTO("user@test.com", "Test User", null, "password123");
+        UserCreateDTO userCreateDTO = new UserCreateDTO("user@test.com", "Test User", null, "password123", null);
         User user = new User();
         user.setEmail("user@test.com");
         user.setName("Test User");
@@ -56,7 +56,7 @@ class UserServiceImplTest {
 
     @Test
     void testStore_DuplicateEmail() {
-        UserCreateDTO userCreateDTO = new UserCreateDTO("user@test.com", "Test User", null, "password123");
+        UserCreateDTO userCreateDTO = new UserCreateDTO("user@test.com", "Test User", null, "password123", null);
 
         SQLIntegrityConstraintViolationException sqlException = new SQLIntegrityConstraintViolationException("Duplicate entry");
         DataIntegrityViolationException dataIntegrityViolationException = new DataIntegrityViolationException("Duplicate entry", sqlException);
@@ -69,7 +69,7 @@ class UserServiceImplTest {
 
     @Test
     void testStore_NoPhotoProvided() {
-        UserCreateDTO userCreateDTO = new UserCreateDTO("user@test.com", "Test User", null,"password123");
+        UserCreateDTO userCreateDTO = new UserCreateDTO("user@test.com", "Test User", null,"password123", null);
         User user = new User();
         user.setEmail("user@test.com");
         user.setName("Test User");

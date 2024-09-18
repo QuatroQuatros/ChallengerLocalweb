@@ -1,4 +1,4 @@
-package com.challangeLocaweb.api.dtos.userpreferences;
+package com.challangeLocaweb.api.dtos.user.preferences;
 
 import com.challangeLocaweb.api.models.UserPreferences;
 
@@ -8,18 +8,18 @@ public record UserPreferencesResponseDTO(
     Long id,
     String theme,
     String language,
-    String timezone,
-    LocalDateTime updatedAt,
-    LocalDateTime createdAt
+    LocalDateTime created_at,
+    LocalDateTime updated_at
+
 ) {
     public UserPreferencesResponseDTO(UserPreferences userPreferences) {
         this(
             userPreferences.getId(),
             userPreferences.getTheme(),
             userPreferences.getLanguage(),
-            userPreferences.getTimezone(),
-            userPreferences.getUpdatedAt(),
-            userPreferences.getCreatedAt()
+            userPreferences.getCreatedAt(),
+            userPreferences.getUpdatedAt()
+
         );
     }
 }
