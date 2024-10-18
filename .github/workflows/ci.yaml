@@ -1,0 +1,89 @@
+name: Java CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_DATABASE: challenger
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+      rabbitmq:
+        image: rabbitmq:3-management
+        env:
+          RABBITMQ_DEFAULT_USER: guest
+          RABBITMQ_DEFAULT_PASS: guest
+        ports:
+          - 5672:5672
+          - 15672:15672
+      minio:
+        image: minio/minio
+        env:
+          MINIO_ROOT_USER: minio
+          MINIO_ROOT_PASSWORD: minio123
+        ports:
+          - 9000:9000
+          - 9001:9001
+        options: >
+          --health-cmd="curl -f http://localhost:9000/minio/health/live"
+          --health-interval=30s
+          --health-timeout=5s
+          --health-retries=3
+        volumes:
+          - /tmp/minio:/data
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Run Tests
+        run: mvn test
+        env:
+          MYSQL_DATABASE: challenger
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_HOST: 127.0.0.1
+          RABBITMQ_DEFAULT_USER: guest
+          RABBITMQ_DEFAULT_PASS: guest
+          MINIO_ROOT_USER: minio
+          MINIO_ROOT_PASSWORD: minio123
+          MINIO_HOST: http://127.0.0.1:9000
+
+      - name: Build Docker image
+        run: docker build -t minha-aplicacao:latest .
+
+      - name: Deploy Application
+        run: docker-compose up -d

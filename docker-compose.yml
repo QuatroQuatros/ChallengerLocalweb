@@ -1,3 +1,4 @@
+version: '3'
 services:
   mysql:
     image: 'mysql:latest'
@@ -8,6 +9,10 @@ services:
       - '3306:3306'
     networks:
       - api_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -38,7 +43,7 @@ services:
     networks:
       - api_network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      test: [ "CMD", "curl", "-f", "http://minio:9000/minio/health/live" ]
       interval: 30s
       retries: 5
     restart: always
@@ -49,7 +54,7 @@ services:
     depends_on:
       - minio
     networks:
-       - api_network
+      - api_network
     entrypoint: >
       /bin/sh -c "
         until (mc alias set myminio http://minio:9000 minio minio123 && mc ls myminio); do
@@ -60,9 +65,40 @@ services:
       "
     restart: on-failure
 
+  spring-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      minio:
+        condition: service_healthy
+      createbucket:
+        condition: service_completed_successfully
+    ports:
+      - "8080:8080"
+    networks:
+      - api_network
+
+  spam-classifier:
+    build:
+      context: ../SPAM
+      dockerfile: Dockerfile
+    depends_on:
+      rabbitmq:
+        condition: service_started
+    networks:
+      - api_network
+    volumes:
+      - spam_data:/app
+
 volumes:
   rabbitmq_data:
   minio_data:
+  spam_data:
 
 networks:
   api_network:

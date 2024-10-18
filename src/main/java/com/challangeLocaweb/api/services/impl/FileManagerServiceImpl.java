@@ -15,14 +15,18 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import java.net.URI;
 import java.nio.file.Paths;
 
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.nio.file.Files;
+
 @Service
 public class FileManagerServiceImpl implements FileManagerService {
 
     private final S3Client s3Client;
 
     public FileManagerServiceImpl(@Value("${cloud.aws.credentials.access-key}") String accessKey,
-                        @Value("${cloud.aws.credentials.secret-key}") String secretKey,
-                        @Value("${cloud.aws.s3.endpoint}") String endpoint) {
+                                  @Value("${cloud.aws.credentials.secret-key}") String secretKey,
+                                  @Value("${cloud.aws.s3.endpoint}") String endpoint) {
 
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
 
@@ -33,15 +37,26 @@ public class FileManagerServiceImpl implements FileManagerService {
                 .build();
     }
 
-    public void uploadFile(String bucketName, String objectKey, String filePath) {
+    @Override
+    public void uploadFile(String bucketName, String objectKey, MultipartFile file) throws IOException {
+        // Converte o MultipartFile em um arquivo temporário para upload
+        java.nio.file.Path tempFile = Files.createTempFile("upload-", file.getOriginalFilename());
+        file.transferTo(tempFile);
+
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
                 .build();
 
-        s3Client.putObject(putObjectRequest, Paths.get(filePath));
+        // Faz o upload do arquivo temporário para o MinIO (S3 Simulado)
+        s3Client.putObject(putObjectRequest, tempFile);
+
+        // Deleta o arquivo temporário após o upload
+        Files.delete(tempFile);
+        System.out.println("Upload completo: " + objectKey);
     }
 
+    @Override
     public void listObjects(String bucketName) {
         ListObjectsV2Request request = ListObjectsV2Request.builder()
                 .bucket(bucketName)
@@ -53,3 +68,4 @@ public class FileManagerServiceImpl implements FileManagerService {
         }
     }
 }
+

@@ -6,8 +6,10 @@ import com.challangeLocaweb.api.dtos.emails.EmailUpdateDTO;
 import com.challangeLocaweb.api.exceptions.DuplicateEntryException;
 import com.challangeLocaweb.api.mails.EmailMessage;
 import com.challangeLocaweb.api.models.Email;
+import com.challangeLocaweb.api.models.EmailReceiver;
 import com.challangeLocaweb.api.models.EmailSent;
 import com.challangeLocaweb.api.models.User;
+import com.challangeLocaweb.api.repositories.EmailReceiverRepository;
 import com.challangeLocaweb.api.repositories.EmailRepository;
 import com.challangeLocaweb.api.repositories.EmailSentRepository;
 import com.challangeLocaweb.api.services.EmailService;
@@ -30,6 +32,10 @@ public class EmailServiceImpl extends AbstractCrudService<Email, Long, EmailCrea
 
     @Autowired
     private EmailSentRepository emailSentRepository;
+
+    @Autowired
+    private EmailReceiverRepository emailReceiverRepository;
+
 
     @Autowired
     private QueueService queueService;
@@ -71,16 +77,25 @@ public class EmailServiceImpl extends AbstractCrudService<Email, Long, EmailCrea
             BeanUtils.copyProperties(emailData, email);
 
             Email emailSaved = emailRepository.save(email);
+
             User user = authHelpers.getUser();
 
             EmailMessage emailMessage = new EmailMessage(email.getSender(), email.getSubject(), email.getContentPlain());
             queueService.queueEmail(emailMessage);
 
-
             EmailSent emailSent = new EmailSent();
             emailSent.setEmail(emailSaved);
             emailSent.setUser(user);
             emailSentRepository.save(emailSent);
+
+            for (String receiver : emailData.receivers()) {
+                EmailReceiver emailReceiver = new EmailReceiver();
+                emailReceiver.setEmail(emailSaved);
+                emailReceiver.setReceiver(receiver);
+                emailReceiver.setIsCc(false);
+                emailReceiver.setIsCco(false);
+                emailReceiverRepository.save(emailReceiver);
+            }
 
             return new EmailResponseDTO(emailSaved);
 
