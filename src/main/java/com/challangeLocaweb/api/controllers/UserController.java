@@ -27,31 +27,28 @@ public class UserController {
 
     private final UserService service;
 
-    @Autowired
     public UserController(UserService service) {
         this.service = service;
     }
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseDTO<Page<UserResponseDTO>> listAll(Pageable page){
+    public BaseResponseDTO<Page<UserResponseDTO>> listAll(Pageable page) {
         String message = messageSource.getMessage("user.search.success", null, LocaleContextHolder.getLocale());
         return new BaseResponseDTO<>(
                 message,
-                service.getAll(page)
-        );
+                service.getAll(page));
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseDTO<UserResponseDTO> getByID(@PathVariable Long id){
-        try{
+    public BaseResponseDTO<UserResponseDTO> getByID(@PathVariable Long id) {
+        try {
             String message = messageSource.getMessage("user.search.success", null, LocaleContextHolder.getLocale());
             return new BaseResponseDTO<>(
                     message,
-                    service.getById(id)
-            );
-        }catch (ModelNotFoundException e){
+                    service.getById(id));
+        } catch (ModelNotFoundException e) {
             throw new ModelNotFoundException("user.not.found");
         }
 
@@ -59,26 +56,25 @@ public class UserController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponseDTO<UserResponseDTO> store(@RequestBody @Valid UserCreateDTO userData){
+    public BaseResponseDTO<UserResponseDTO> store(@RequestBody @Valid UserCreateDTO userData) {
         String message = messageSource.getMessage("user.created.success", null, LocaleContextHolder.getLocale());
         return new BaseResponseDTO<>(
                 message,
-                service.store(userData)
-        );
+                service.store(userData));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseDTO<UserResponseDTO> update(@PathVariable Long id, @RequestBody @Valid UserUpdateDTO userData){
+    public BaseResponseDTO<UserResponseDTO> update(@PathVariable Long id, @RequestBody @Valid UserUpdateDTO userData) {
         AuthHelpers authHelpers = new AuthHelpers();
         if (authHelpers.validateAccess(id)) {
-            try{
-                String message = messageSource.getMessage("user.updated.success", null, LocaleContextHolder.getLocale());
+            try {
+                String message = messageSource.getMessage("user.updated.success", null,
+                        LocaleContextHolder.getLocale());
                 return new BaseResponseDTO<>(
                         message,
-                        service.update(id, userData)
-                );
-            }catch (ModelNotFoundException e){
+                        service.update(id, userData));
+            } catch (ModelNotFoundException e) {
                 throw new ModelNotFoundException("user.not.found");
             }
         } else {
@@ -89,14 +85,15 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public BaseResponseDTO<Object> delete(@PathVariable Long id){
+    public BaseResponseDTO<Object> delete(@PathVariable Long id) {
         AuthHelpers authHelpers = new AuthHelpers();
         if (authHelpers.validateAccess(id)) {
-            try{
+            try {
                 service.delete(id);
-                String message = messageSource.getMessage("user.deleted.success", null, LocaleContextHolder.getLocale());
+                String message = messageSource.getMessage("user.deleted.success", null,
+                        LocaleContextHolder.getLocale());
                 return new BaseResponseDTO<>(message, null);
-            }catch (ModelNotFoundException e){
+            } catch (ModelNotFoundException e) {
                 throw new ModelNotFoundException("user.not.found");
             }
         } else {
@@ -107,19 +104,17 @@ public class UserController {
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponseDTO<UserResponseDTO> getMyUser(){
+    public BaseResponseDTO<UserResponseDTO> getMyUser() {
         AuthHelpers authHelpers = new AuthHelpers();
-        try{
+        try {
             User user = authHelpers.getUser();
             String message = messageSource.getMessage("user.recovered.success", null, LocaleContextHolder.getLocale());
             return new BaseResponseDTO<>(
                     message,
-                    new UserResponseDTO(user)
-            );
-        }catch (ModelNotFoundException e){
+                    new UserResponseDTO(user));
+        } catch (ModelNotFoundException e) {
             throw new ModelNotFoundException("user.not.found");
         }
-
 
     }
 }
